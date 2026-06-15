@@ -6,6 +6,7 @@ import { AGGREGATE_REGIONS } from '../../shared/config/kb-aggregates';
 import { getRegions, peekRegions, prefetchRegions, type RegionItem } from '../../shared/lib/kb-region-api';
 import { buildMidOptions, type MidOption } from '../../shared/lib/kb-mid-options';
 import { InfoTip } from '../../shared/ui/InfoTip';
+import { RegionSyncToggle } from '../../features/region-sync';
 import { PeriodSlider } from './PeriodSlider';
 
 // 이동평균 기간 선택지(주)
@@ -159,6 +160,9 @@ export const RegionSelector: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-white">
+      {/* 주간·월간 연동 토글 */}
+      <RegionSyncToggle />
+
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">

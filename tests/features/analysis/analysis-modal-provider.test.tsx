@@ -30,7 +30,7 @@ beforeEach(() => {
 describe('AnalysisModal × provider', () => {
   it('분석 실행 시 payload에 provider/model을 포함한다', async () => {
     render(<AnalysisModal open onClose={() => {}} />);
-    fireEvent.click(screen.getByText('분석하기'));
+    fireEvent.click(screen.getByRole('button', { name: '분석하기' }));
     await waitFor(() => expect(runAnalysisMock).toHaveBeenCalled());
     const payload = runAnalysisMock.mock.calls[0]![0] as { provider?: string; model?: string };
     expect(payload.provider).toBe('openai');

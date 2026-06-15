@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppStore } from '../../shared/lib/store';
 import { useMonthlyStore } from '../../shared/lib/monthly-store';
+import { initRegionSync } from '../../features/region-sync';
 
 interface StoreProviderProps {
   children: React.ReactNode;
@@ -11,6 +12,9 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
 
   // Initialize on app start
   useEffect(() => {
+    // 주간↔월간 연동 구독 설정(1회).
+    initRegionSync();
+
     loadRegions();
     loadStatus();
     loadDates();
@@ -24,6 +28,9 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
       void m.loadTradeRegions();
       void m.loadTradeData();
       void m.loadMarketData();
+    } else if (m.allDates.length === 0) {
+      // 연동 시 기준월·기간 변환에 필요한 월간 날짜축을 미리 확보(주간 모드여도).
+      void m.loadDates();
     }
   }, []);
 

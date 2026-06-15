@@ -15,7 +15,7 @@ export type TokenCounter = (text: string) => number;
 // 채팅 메시지 래핑(role 등) 근사 오버헤드.
 const CHAT_OVERHEAD = 8;
 
-const MAX_REPORT_REGIONS = 3; // 분석 대상 지역 상한(탭 수 계산용)
+const MAX_REPORT_REGIONS = 5; // 분석 대상 지역 상한(탭 수 계산용)
 
 // gpt-tokenizer(BPE 사전 포함, 수백 KB)는 분석 모달이 열릴 때만 동적 로드해 초기 번들에서 제외.
 let counterPromise: Promise<TokenCounter> | null = null;
@@ -32,13 +32,17 @@ export function estimateInputTokens(payload: Payload, count: TokenCounter): numb
   return count(systemPrompt) + count(user) + CHAT_OVERHEAD;
 }
 
-// 출력은 모델이 정하므로 사전 확정 불가 — 탭/지표 규모로 범위만 추정.
+// 출력은 모델이 정하므로 사전 확정 불가 — 보고서 구조(탭 수)로 범위만 추정.
+// 보고서는 탭마다 결론(5문장+)·요약(3×2문장)·판단 근거 3·의문점 3·인사이트 3의
+// 한국어 마크다운으로, 탭당 대략 A4 반 페이지(≈1,000~2,000 토큰) 분량이다.
+// 분량은 데이터셋 수보다 탭 수에 크게 좌우되며, 데이터셋은 인용 수치를 늘려 소폭 가산한다.
 export function estimateOutputTokens(payload: Payload): { low: number; high: number } {
   const regions = payload.scope.regions.length;
-  const tabCount = regions > 1 ? 1 + Math.min(regions, MAX_REPORT_REGIONS) : 1; // 종합 + 지역별
+  const tabCount = regions > 1 ? 1 + Math.min(regions, MAX_REPORT_REGIONS) : 1; // 종합 + 지역별(최대 3)
   const datasets = payload.datasets.length;
-  const low = tabCount * (160 + datasets * 20);
-  const high = tabCount * (300 + datasets * 55);
+  // 탭당: 한국어 구조 본문 기본분 + 데이터셋(인용 수치)당 소폭 가산.
+  const low = tabCount * (900 + datasets * 25);
+  const high = tabCount * (1700 + datasets * 60);
   return { low, high };
 }
 

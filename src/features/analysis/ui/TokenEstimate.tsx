@@ -39,14 +39,14 @@ export function TokenEstimate({ payload, model, loading }: TokenEstimateProps) {
   );
 
   if (loading || (payload && !count)) {
-    return <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-400">예상치 계산 중…</div>;
+    return <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-400">예상치 계산 중…</div>;
   }
   if (!est) {
-    return <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-400">지역·지표를 선택하면 예상 토큰/비용을 표시합니다.</div>;
+    return <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-400">지역·지표를 선택하면 예상 토큰/비용을 표시합니다.</div>;
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600">
         <span>
           예상 입력 <strong className="text-gray-900">{fmt(est.inputTokens)}</strong> tok
@@ -61,12 +61,12 @@ export function TokenEstimate({ payload, model, loading }: TokenEstimateProps) {
         </span>
       </div>
       {est.overContext && (
-        <p className="mt-1 text-amber-600">
+        <p className="mt-1 text-sm text-amber-600">
           ⚠ 입력이 선택 모델의 컨텍스트 한도에 근접합니다. 지역·지표·기간을 줄이는 것을 권장합니다.
         </p>
       )}
       {est.cost.usd == null && !est.cost.free && (
-        <p className="mt-1 text-gray-400">선택 모델의 단가 정보가 없어 비용은 추정할 수 없습니다(구독·세션 모델 등).</p>
+        <p className="mt-1 text-sm text-gray-400">선택 모델의 단가 정보가 없어 비용은 추정할 수 없습니다(구독·세션 모델 등).</p>
       )}
     </div>
   );
