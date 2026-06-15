@@ -6,6 +6,7 @@ import { getRegions, peekRegions, prefetchRegions, type RegionItem } from '../..
 import { buildMidOptions, type MidOption } from '../../shared/lib/kb-mid-options';
 import { monthlyLocal, type MonthlyRegionLookup } from '../../entities/monthly-data';
 import { InfoTip } from '../../shared/ui/InfoTip';
+import { RegionSyncToggle } from '../../features/region-sync';
 import { PeriodSlider } from '../region-selector/PeriodSlider';
 
 // 이동평균 기간 선택지(월)
@@ -179,6 +180,9 @@ export const MonthlyRegionCascade: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-white">
+      {/* 주간·월간 연동 토글 */}
+      <RegionSyncToggle />
+
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">

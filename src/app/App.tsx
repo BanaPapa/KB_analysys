@@ -11,6 +11,7 @@ import { useAppStore } from '../shared/lib/store';
 import { useMonthlyStore, type ViewMode, type WeeklyTab } from '../shared/lib/monthly-store';
 import { AnalysisModal } from '../features/analysis';
 import { SlotControls } from '../features/chart-slots';
+import { ExportButton } from '../features/data-export';
 
 const MODE_TABS: { key: ViewMode; label: string }[] = [
   { key: 'weekly', label: '주간' },
@@ -96,11 +97,12 @@ const AppHeader: FC<{ onOpenAnalysis: () => void }> = ({ onOpenAnalysis }) => {
             {mode === 'monthly' && <span>월간 주택 시계열</span>}
           </div>
           <SlotControls />
+          <ExportButton />
           <button
             onClick={onOpenAnalysis}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
           >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             분석

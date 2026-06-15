@@ -12,7 +12,7 @@ export interface PickedRegion {
   label: string;
 }
 
-const MAX_ANALYSIS_REGIONS = 5; // 사이드바와 동일한 지역 상한
+export const MAX_ANALYSIS_REGIONS = 5; // 분석 대상 지역 상한. 그래프 비교(5)와 동일.
 
 interface AnalysisRegionPickerProps {
   value: PickedRegion[];
@@ -135,9 +135,9 @@ export function AnalysisRegionPicker({ value, onChange }: AnalysisRegionPickerPr
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <p className="text-sm font-semibold text-gray-700">포함할 지역 ({value.length}/{MAX_ANALYSIS_REGIONS})</p>
+        <p className="text-base font-semibold text-gray-700">포함할 지역 ({value.length}/{MAX_ANALYSIS_REGIONS})</p>
         {value.length > 0 && (
-          <button onClick={() => onChange([])} className="rounded border border-gray-200 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-50">
+          <button onClick={() => onChange([])} className="rounded border border-gray-200 px-2 py-1 text-sm text-gray-500 hover:bg-gray-50">
             전체 해제
           </button>
         )}
@@ -147,7 +147,7 @@ export function AnalysisRegionPicker({ value, onChange }: AnalysisRegionPickerPr
         <select
           value={largeValue}
           onChange={e => setLargeValue(e.target.value)}
-          className="min-w-0 flex-1 rounded-md border border-gray-200 px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="min-w-0 flex-1 rounded-md border border-gray-200 px-2.5 py-2.5 text-base focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           <option value="">대지역 (시/도 · 집계)</option>
           <optgroup label="집계 지역">
@@ -169,7 +169,7 @@ export function AnalysisRegionPicker({ value, onChange }: AnalysisRegionPickerPr
           value={midKey}
           disabled={!selectedSido || loadingMid}
           onChange={e => setMidKey(e.target.value)}
-          className="min-w-0 flex-1 rounded-md border border-gray-200 px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-300"
+          className="min-w-0 flex-1 rounded-md border border-gray-200 px-2.5 py-2.5 text-base focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-300"
         >
           <option value="">
             {!selectedSido
@@ -192,7 +192,7 @@ export function AnalysisRegionPicker({ value, onChange }: AnalysisRegionPickerPr
           onClick={handleAdd}
           disabled={!canAdd}
           title={isFull ? `최대 ${MAX_ANALYSIS_REGIONS}개` : alreadyAdded ? '이미 추가됨' : undefined}
-          className="flex-none rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400"
+          className="flex-none rounded-md bg-blue-600 px-4 py-2.5 text-base font-semibold text-white hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400"
         >
           추가
         </button>

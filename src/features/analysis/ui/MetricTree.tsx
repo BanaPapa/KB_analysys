@@ -68,17 +68,17 @@ export function MetricTree({ selected, onChange }: MetricTreeProps) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <p className="text-sm font-semibold text-gray-700">분석할 지표</p>
+        <p className="text-base font-semibold text-gray-700">분석할 지표</p>
         <div className="flex items-center gap-1">
           <button
             onClick={selectAll}
-            className="rounded border border-gray-200 px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50"
+            className="rounded border border-gray-200 px-2 py-1 text-sm text-gray-600 hover:bg-gray-50"
           >
             전체 선택
           </button>
           <button
             onClick={clearAll}
-            className="rounded border border-gray-200 px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50"
+            className="rounded border border-gray-200 px-2 py-1 text-sm text-gray-600 hover:bg-gray-50"
           >
             전체 해제
           </button>
@@ -118,8 +118,8 @@ export function MetricTree({ selected, onChange }: MetricTreeProps) {
                   onChange={() => toggleGroup(group, allOn)}
                   className="h-4 w-4 rounded border-gray-300 text-blue-600"
                 />
-                <span className="text-sm font-semibold text-gray-800">{group.label}</span>
-                <span className="ml-1 text-xs text-gray-400">
+                <span className="text-base font-semibold text-gray-800">{group.label}</span>
+                <span className="ml-1 text-sm text-gray-400">
                   ({checkedCount}/{group.children.length})
                 </span>
               </div>
@@ -130,7 +130,7 @@ export function MetricTree({ selected, onChange }: MetricTreeProps) {
                   {group.children.map(child => (
                     <label
                       key={child.tab}
-                      className="flex cursor-pointer items-center gap-2 py-1.5 pl-10 pr-3 text-sm hover:bg-gray-50"
+                      className="flex cursor-pointer items-center gap-2 py-2 pl-10 pr-3 text-base hover:bg-gray-50"
                     >
                       <input
                         type="checkbox"
