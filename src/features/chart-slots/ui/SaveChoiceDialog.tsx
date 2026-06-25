@@ -58,7 +58,7 @@ export function SaveChoiceDialog({ slotIndex, originMode, onChoose, onCancel }: 
     >
       <div
         style={{ width: 'min(96vw, 1014px)', height: 'min(82vh, 595px)' }}
-        className="flex flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-xl"
+        className="eos-modal flex flex-col rounded-xl p-6 shadow-xl"
         onMouseDown={e => e.stopPropagation()}
       >
         <h3 className="text-lg font-bold text-gray-900">

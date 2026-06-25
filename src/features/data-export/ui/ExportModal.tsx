@@ -61,18 +61,14 @@ export function ExportModal({ onClose }: ExportModalProps) {
       onMouseDown={onClose}
     >
       <div
-        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl"
+        className="eos-modal flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl shadow-2xl"
         onMouseDown={e => e.stopPropagation()}
       >
         {/* 헤더 */}
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-3">
           <h2 className="text-lg font-bold text-gray-900">데이터 내보내기</h2>
-          <button
-            onClick={onClose}
-            className="rounded-md px-2 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-            aria-label="닫기"
-          >
-            ✕
+          <button onClick={onClose} className="eos-modal-x" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
 

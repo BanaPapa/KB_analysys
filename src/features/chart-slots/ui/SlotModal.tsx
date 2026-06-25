@@ -78,7 +78,7 @@ export function SlotModal({ mode, onClose }: SlotModalProps) {
     >
       <div
         style={{ width: '50vw', height: '60vh' }}
-        className="relative flex min-w-[420px] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl"
+        className="eos-modal relative flex min-w-[420px] flex-col overflow-hidden rounded-2xl shadow-2xl"
         onMouseDown={e => e.stopPropagation()}
       >
         {/* 헤더 */}
@@ -89,12 +89,8 @@ export function SlotModal({ mode, onClose }: SlotModalProps) {
               현재 화면: {MODE_LABEL[mode]}
             </span>
           </h2>
-          <button
-            onClick={onClose}
-            className="rounded-md px-2 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
-            aria-label="닫기"
-          >
-            ✕
+          <button onClick={onClose} className="eos-modal-x" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
 

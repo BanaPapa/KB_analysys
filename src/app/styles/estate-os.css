@@ -882,3 +882,111 @@ body.eos-body {
 :root[data-theme='dark'] .eos-view .recharts-legend-item-text {
   color: var(--fg-2) !important;
 }
+
+/* ============================================================
+   KB 시계열분석 모달 — 셸 테마 통합
+   fixed z-50 overlay이므로 .eos-main 범위 밖 별도 적용.
+   ============================================================ */
+
+/* 모달 패널 — CSS 변수 기반(라이트·다크 자동 전환) */
+.eos-modal {
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  color: var(--fg);
+}
+
+/* 닫기 버튼 (아이콘형) */
+.eos-modal-x {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex: none;
+}
+.eos-modal-x:hover {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+.eos-modal-x svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* ── 다크 모드 내부 Tailwind 색상 → CSS 변수 재보정 ── */
+:root[data-theme='dark'] .eos-modal .bg-white { background-color: var(--surface-3) !important; }
+:root[data-theme='dark'] .eos-modal .bg-gray-50,
+:root[data-theme='dark'] .eos-modal .bg-gray-50\/60,
+:root[data-theme='dark'] .eos-modal .bg-gray-50\/40 { background-color: var(--surface) !important; }
+:root[data-theme='dark'] .eos-modal .bg-gray-100,
+:root[data-theme='dark'] .eos-modal .bg-gray-200 { background-color: var(--surface-2) !important; }
+:root[data-theme='dark'] .eos-modal [class*='border-gray-'] { border-color: var(--border) !important; }
+:root[data-theme='dark'] .eos-modal .text-gray-900,
+:root[data-theme='dark'] .eos-modal .text-gray-800 { color: var(--fg) !important; }
+:root[data-theme='dark'] .eos-modal .text-gray-700,
+:root[data-theme='dark'] .eos-modal .text-gray-600 { color: var(--fg-2) !important; }
+:root[data-theme='dark'] .eos-modal .text-gray-500,
+:root[data-theme='dark'] .eos-modal .text-gray-400,
+:root[data-theme='dark'] .eos-modal .text-gray-300 { color: var(--muted) !important; }
+
+/* Amber 팁·경고 박스 */
+:root[data-theme='dark'] .eos-modal .bg-amber-50 { background-color: var(--yellow-dim) !important; }
+:root[data-theme='dark'] .eos-modal .text-amber-700,
+:root[data-theme='dark'] .eos-modal .text-amber-800 { color: var(--yellow) !important; }
+:root[data-theme='dark'] .eos-modal .border-amber-300 { border-color: rgba(245, 184, 92, 0.35) !important; }
+
+/* 블루 강조 상태 */
+:root[data-theme='dark'] .eos-modal .bg-blue-50,
+:root[data-theme='dark'] .eos-modal .bg-blue-50\/50,
+:root[data-theme='dark'] .eos-modal .bg-blue-50\/60,
+:root[data-theme='dark'] .eos-modal .bg-blue-50\/40 { background-color: var(--blue-dim) !important; }
+:root[data-theme='dark'] .eos-modal .bg-blue-100 { background-color: rgba(79, 141, 255, 0.2) !important; }
+:root[data-theme='dark'] .eos-modal .text-blue-600,
+:root[data-theme='dark'] .eos-modal .text-blue-700 { color: var(--blue) !important; }
+:root[data-theme='dark'] .eos-modal .border-blue-200 { border-color: rgba(79, 141, 255, 0.3) !important; }
+:root[data-theme='dark'] .eos-modal .border-blue-300 { border-color: rgba(79, 141, 255, 0.4) !important; }
+:root[data-theme='dark'] .eos-modal .border-blue-500 { border-color: var(--blue) !important; }
+
+/* 퍼플 배지 */
+:root[data-theme='dark'] .eos-modal .bg-violet-100 { background-color: var(--purple-dim) !important; }
+:root[data-theme='dark'] .eos-modal .text-violet-700 { color: var(--purple) !important; }
+
+/* 빨간·그린 계열 */
+:root[data-theme='dark'] .eos-modal .text-red-600 { color: var(--red) !important; }
+
+/* Hover 보정 */
+:root[data-theme='dark'] .eos-modal .hover\:bg-gray-50:hover,
+:root[data-theme='dark'] .eos-modal .hover\:bg-gray-100:hover { background-color: var(--surface-2) !important; }
+:root[data-theme='dark'] .eos-modal .hover\:text-gray-600:hover,
+:root[data-theme='dark'] .eos-modal .hover\:text-gray-700:hover { color: var(--fg) !important; }
+
+/* border-gray 버튼 보정 */
+:root[data-theme='dark'] .eos-modal button[class*='border-gray-']:not([class*='bg-blue']):not([class*='bg-green']) {
+  border-color: var(--border-2) !important;
+}
+:root[data-theme='dark'] .eos-modal button[class*='border-gray-']:not([class*='bg-blue']):not([class*='bg-green']):hover {
+  background-color: var(--surface-2) !important;
+}
+
+/* input, select, textarea */
+:root[data-theme='dark'] .eos-modal input:not([type='range']):not([type='checkbox']):not([type='radio']),
+:root[data-theme='dark'] .eos-modal select,
+:root[data-theme='dark'] .eos-modal textarea {
+  background-color: var(--surface) !important;
+  border-color: var(--border-2) !important;
+  color: var(--fg) !important;
+}
+
+/* 저장됨 / 복사됨 green disabled 상태 */
+:root[data-theme='dark'] .eos-modal .disabled\:bg-green-50:disabled { background-color: rgba(45, 212, 191, 0.1) !important; }
+:root[data-theme='dark'] .eos-modal .disabled\:text-green-600:disabled { color: var(--teal) !important; }
+:root[data-theme='dark'] .eos-modal .disabled\:border-green-200:disabled { border-color: rgba(45, 212, 191, 0.25) !important; }
