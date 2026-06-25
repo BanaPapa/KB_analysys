@@ -1,5 +1,6 @@
-import { type FC, useState, useRef, useEffect } from 'react';
+import { type FC, useState } from 'react';
 import { StoreProvider } from './providers';
+import { AppNav } from '../widgets/app-nav';
 import { RegionSelector } from '../widgets/region-selector';
 import { ChartDashboard } from '../widgets/chart-dashboard';
 import { TradeDashboard } from '../widgets/weekly-trade-dashboard';
@@ -28,13 +29,19 @@ const MONTHLY_TABS: { key: WeeklyTab; label: string }[] = [
   { key: 'market', label: '시장지표' },
 ];
 
-// 주간 뷰: 시세지표 / 거래지표 (탭은 상단 헤더에 위치)
+const TAB_LABEL: Record<WeeklyTab, string> = {
+  price: '시세지표',
+  trade: '거래지표',
+  market: '시장지표',
+};
+
+// 주간 뷰: 시세지표 / 거래지표
 const WeeklyView: FC = () => {
   const weeklyTab = useMonthlyStore(s => s.weeklyTab);
   return weeklyTab === 'trade' ? <TradeDashboard /> : <ChartDashboard />;
 };
 
-// 월간 뷰: 시세지표 / 거래지표 / 시장지표.
+// 월간 뷰: 시세지표 / 거래지표 / 시장지표
 const MonthlyView: FC = () => {
   const weeklyTab = useMonthlyStore(s => s.weeklyTab);
   if (weeklyTab === 'trade') return <MonthlyTradeDashboard />;
@@ -42,146 +49,128 @@ const MonthlyView: FC = () => {
   return <MonthlyChartDashboard />;
 };
 
-const AppHeader: FC<{ onOpenAnalysis: () => void }> = ({ onOpenAnalysis }) => {
+// 브레드크럼 헤더 — 통합 셸의 분석 모듈 경로 + 우측 액션
+const ShellHeader: FC<{ onOpenAnalysis: () => void }> = ({ onOpenAnalysis }) => {
   const { latestDate, totalRecords } = useAppStore();
-  const { mode, setMode, weeklyTab, setWeeklyTab } = useMonthlyStore();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 h-14 fixed top-0 left-0 right-0 z-40">
-      <div className="flex justify-between items-center h-full px-4 lg:px-6">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h1 className="text-base font-bold text-gray-900 leading-tight">KB 부동산 데이터 플랫폼</h1>
-          </div>
+    <header className="eos-hdr">
+      <div className="eos-crumb">
+        <svg className="home" viewBox="0 0 24 24">
+          <path d="M3 11l9-7 9 7" />
+          <path d="M5 10v10h14V10" />
+        </svg>
+        <svg className="sep" viewBox="0 0 24 24">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+        <span>분석 모듈</span>
+        <svg className="sep" viewBox="0 0 24 24">
+          <path d="M9 6l6 6-6 6" />
+        </svg>
+        <b>KB 시계열 분석</b>
+        <span className="tag">LIVE</span>
+      </div>
 
-          {/* 주간 / 월간 토글 */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
-            {MODE_TABS.map(t => (
-              <button
-                key={t.key}
-                onClick={() => setMode(t.key)}
-                className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${
-                  mode === t.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {/* 시세 / 거래 / (월간) 시장 하위 탭 */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
-            {(mode === 'monthly' ? MONTHLY_TABS : WEEKLY_TABS).map(t => (
-                <button
-                  key={t.key}
-                  onClick={() => setWeeklyTab(t.key)}
-                  className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${
-                    weeklyTab === t.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-4 text-xs text-gray-500">
-            {mode === 'weekly' && latestDate && <span>최신 데이터: {latestDate}</span>}
-            {mode === 'weekly' && totalRecords > 0 && <span>총 {totalRecords.toLocaleString()}건</span>}
-            {mode === 'monthly' && <span>월간 주택 시계열</span>}
-          </div>
-          <SlotControls />
-          <ExportButton />
-          <button
-            onClick={onOpenAnalysis}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            분석
-          </button>
-        </div>
+      <div className="eos-hdr-right">
+        {(latestDate || totalRecords > 0) && (
+          <span className="eos-pill tnum">
+            <span className="d t" />
+            {latestDate ? `최신 ${latestDate}` : ''}
+            {latestDate && totalRecords > 0 ? ' · ' : ''}
+            {totalRecords > 0 ? `${totalRecords.toLocaleString()}건` : ''}
+          </span>
+        )}
+        <SlotControls />
+        <ExportButton />
+        <button className="eos-btn-primary" onClick={onOpenAnalysis}>
+          <svg viewBox="0 0 24 24">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          분석
+        </button>
       </div>
     </header>
   );
 };
 
-const SIDEBAR_MIN = 240;
-const SIDEBAR_MAX = 600;
-
 const App: FC = () => {
-  const mode = useMonthlyStore(s => s.mode);
+  const { mode, setMode, weeklyTab, setWeeklyTab } = useMonthlyStore();
   const [analysisOpen, setAnalysisOpen] = useState(false);
+  const [sideCollapsed, setSideCollapsed] = useState(false);
+  const [ctrlCollapsed, setCtrlCollapsed] = useState(false);
 
-  // 드래그로 조정 가능한 사이드바 폭(로컬 저장)
-  const [sidebarWidth, setSidebarWidth] = useState(() => {
-    const saved = Number(localStorage.getItem('sidebarWidth'));
-    return saved >= SIDEBAR_MIN && saved <= SIDEBAR_MAX ? saved : 320;
-  });
-  const draggingRef = useRef(false);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (!draggingRef.current) return;
-      setSidebarWidth(Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, e.clientX)));
-    };
-    const onUp = () => {
-      if (!draggingRef.current) return;
-      draggingRef.current = false;
-      document.body.style.userSelect = '';
-      document.body.style.cursor = '';
-    };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-    };
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('sidebarWidth', String(sidebarWidth));
-  }, [sidebarWidth]);
-
-  const startDrag = () => {
-    draggingRef.current = true;
-    document.body.style.userSelect = 'none';
-    document.body.style.cursor = 'col-resize';
-  };
+  const tabs = mode === 'monthly' ? MONTHLY_TABS : WEEKLY_TABS;
+  const title = `${mode === 'monthly' ? '월간' : '주간'} ${TAB_LABEL[weeklyTab]}`;
 
   return (
     <StoreProvider>
-      <div className="min-h-screen bg-gray-50">
-        <AppHeader onOpenAnalysis={() => setAnalysisOpen(true)} />
-        <AnalysisModal open={analysisOpen} onClose={() => setAnalysisOpen(false)} />
+      <div className={`eos-app${sideCollapsed ? ' side-collapsed' : ''}`}>
+        <AppNav onToggleCollapse={() => setSideCollapsed(v => !v)} />
 
-        <div className="flex h-screen pt-14">
-          {/* Sidebar (드래그로 폭 조정) */}
-          <aside
-            style={{ width: sidebarWidth }}
-            className="relative hidden lg:flex bg-white shadow-md border-r border-gray-200 flex-col flex-shrink-0"
-          >
-            {mode === 'weekly' ? <RegionSelector /> : <MonthlyRegionCascade />}
-            {/* 우측 끝 리사이즈 핸들 */}
-            <div
-              onMouseDown={startDrag}
-              title="드래그하여 폭 조정"
-              className="absolute top-0 right-0 z-10 h-full w-1.5 cursor-col-resize transition-colors hover:bg-blue-300/60 active:bg-blue-400/70"
-            />
-          </aside>
+        <div className="eos-main">
+          <ShellHeader onOpenAnalysis={() => setAnalysisOpen(true)} />
 
-          {/* Main Content */}
-          <main className="flex-1 overflow-auto p-4 lg:p-6">
-            {mode === 'weekly' ? <WeeklyView /> : <MonthlyView />}
-          </main>
+          <div className={`eos-work${ctrlCollapsed ? ' ctrl-collapsed' : ''}`}>
+            {/* 검색 조건 패널 — 현재 앱의 지역 선택/컨트롤 */}
+            <div className="eos-ctrl">
+              <div className="eos-ctrl-head">
+                <span className="ch-ic">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+                  </svg>
+                </span>
+                <b>검색 조건</b>
+                <button
+                  className="eos-ctrl-toggle"
+                  title="패널 접기"
+                  onClick={() => setCtrlCollapsed(v => !v)}
+                >
+                  <svg viewBox="0 0 24 24">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+              </div>
+              <div className="eos-ctrl-body">
+                {mode === 'weekly' ? <RegionSelector /> : <MonthlyRegionCascade />}
+              </div>
+            </div>
+
+            {/* 뷰 — 차트/대시보드 */}
+            <div className="eos-view">
+              <div className="eos-mod-head">
+                <h1>{title}</h1>
+                <div className="mh-right">
+                  <div className="eos-seg">
+                    {MODE_TABS.map(t => (
+                      <button
+                        key={t.key}
+                        className={`eos-seg-btn${mode === t.key ? ' active' : ''}`}
+                        onClick={() => setMode(t.key)}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="eos-seg">
+                    {tabs.map(t => (
+                      <button
+                        key={t.key}
+                        className={`eos-seg-btn${weeklyTab === t.key ? ' active' : ''}`}
+                        onClick={() => setWeeklyTab(t.key)}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {mode === 'weekly' ? <WeeklyView /> : <MonthlyView />}
+            </div>
+          </div>
         </div>
+
+        <AnalysisModal open={analysisOpen} onClose={() => setAnalysisOpen(false)} />
       </div>
     </StoreProvider>
   );

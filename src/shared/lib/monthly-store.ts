@@ -118,11 +118,21 @@ export const useMonthlyStore = create<MonthlyStore>()(
     // 'market'은 월간 전용 — 주간으로 전환 시 시세지표로 되돌린다.
     const weeklyTab = mode === 'weekly' && get().weeklyTab === 'market' ? 'price' : get().weeklyTab;
     set({ mode, weeklyTab });
-    if (mode === 'monthly' && get().allDates.length === 0) {
-      void get().loadDates().then(() => get().loadPriceData());
-      void get().loadTradeRegions();
-      void get().loadTradeData();
-      void get().loadMarketData();
+    if (mode === 'monthly') {
+      const loadAll = () => {
+        void get().loadPriceData();
+        void get().loadTradeRegions();
+        void get().loadTradeData();
+        void get().loadMarketData();
+      };
+      // dates가 아직 없으면 먼저 로드 후 데이터 로드, 이미 있으면 바로 데이터 로드.
+      // StoreProvider가 선행 loadDates()를 호출해도 priceData 등은 로드되지 않으므로
+      // allDates 유무와 무관하게 항상 데이터를 로드한다.
+      if (get().allDates.length === 0) {
+        void get().loadDates().then(loadAll);
+      } else {
+        loadAll();
+      }
     }
   },
 
